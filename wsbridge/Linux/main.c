@@ -56,6 +56,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <unistd.h>
+#include <sys/time.h>
 
 #define PORTBUFSIZE     32
 #define BUFSIZE         1024
@@ -100,14 +102,15 @@ static int serial_open(char *portname)
     }
     else
     {
+        // Swith the serial port to raw mode. This causes binary data to pass
+        // through unaltered. raw mode also implies N-8-1
+        cfmakeraw(&term);
+
         // set speed of port
         cfsetspeed(&term, BAUDRATE);
 
-        // set to 8-bits, no parity, 1 stop bit
-        term.c_cflag &= ~PARENB;
-        term.c_cflag &= ~CSTOPB;
-        term.c_cflag &= ~CSIZE;
-        term.c_cflag |= CS8;
+        // CLOCAL - Disable modem control lines
+        // CREAD  - Enable Receiver
 
         term.c_cflag |= (CLOCAL | CREAD);
         tcsetattr(FD_com, TCSANOW, &term);
