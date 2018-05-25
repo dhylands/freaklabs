@@ -17,6 +17,12 @@ it back to 0.
 
 #include <chibi.h>
 
+#if CHIBI_PROMISCUOUS != 1
+#error Must set CHIBI PROMISCUOUS to 1 (in chibiUsrCfg.h)
+#endif
+
+#define LED 4
+
 /**************************************************************************/
 // Initialize
 /**************************************************************************/
@@ -25,6 +31,9 @@ void setup()
   // Init the chibi stack
   chibiInit();
 
+  // Set the channel to match the channel used by the Zigbee controller.
+  chibiSetChannel(20);
+
   // Open the serial port at specified speed. For sniffing, we want to send data
   // out the serial port as quickly as possible. On windows, 250kbps can be used.
   // On linux, it only seems to like standard speeds up to 115200. To make things
@@ -32,9 +41,19 @@ void setup()
   // to boost the speed on a Windows system, use 250000 rather than 115200.
   // Ex: Serial.begin(250000);
   //
-  // Remember: If you change the speed here, make sure you change it on the application
+  // Remember: If you change the speed here, make sure you change it on the wsbridge
   // program as well.
   Serial.begin(115200);
+
+  // Blink the LED 4 times to indicate we're running wsbridge
+  pinMode(LED, OUTPUT);
+
+  for (int i = 0; i < 4; i++) {
+    digitalWrite(LED, 1);
+    delay(100);
+    digitalWrite(LED, 0);
+    delay(100);
+  }
 }
 
 /**************************************************************************/
