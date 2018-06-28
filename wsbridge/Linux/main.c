@@ -319,6 +319,13 @@ int main(int argc, char *argv[])
             FD_ZERO(&fds);
             FD_SET(FD_com, &fds);
 
+            printf("********************************************************\n");
+            printf("********************************************************\n");
+            printf("**\n");
+            printf("** Fixed version of wsbridge \n");
+            printf("********************************************************\n");
+            printf("********************************************************\n");
+            printf("\n");
             printf("Serial port connected. Waiting for wireshark connection.\n");
             printf("Open wireshark and connect to local interface: %s\n", PIPENAME);
         }
@@ -363,7 +370,7 @@ int main(int argc, char *argv[])
                             len = port_buf[i];
                             byte_ctr = 0;
 
-                            printf("Len = %02X.\n", len);
+                            //printf("Len = %02X.\n", len);
 
                             circ_buf[wr_idx] = len;
                             wr_idx = (wr_idx + 1) % BUFSIZE;
